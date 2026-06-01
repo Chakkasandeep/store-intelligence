@@ -1,0 +1,37 @@
+# Reviewer quick start (repo root = this folder):
+#   docker compose up --build
+services:
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./CCTV Footage:/app/CCTV Footage:ro
+      - ./data:/app/data
+      - ./configs/generated:/app/configs/generated
+    environment:
+      - DATABASE_URL=sqlite+aiosqlite:////app/data/store_intel.db
+      - LOG_LEVEL=INFO
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 90s
+
+  dashboard:
+    image: node:20-alpine
+    working_dir: /app
+    volumes:
+      - ./dashboard:/app
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 5173"
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://api:8000
+      - VITE_STORE_ID=ST1008
+    depends_on:
+      api:
+        condition: service_healthy

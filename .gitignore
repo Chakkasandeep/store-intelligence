@@ -1,0 +1,39 @@
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+
+# Node / dashboard build
+dashboard/node_modules/
+dashboard/dist/
+
+# Runtime DB (reviewer regenerates via bootstrap)
+data/store_intel.db
+
+# YOLO weights (re-download on pipeline run; saves repo size)
+yolov8n.pt
+
+# Local env
+.env
+dashboard/.env
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+Thumbs.db
+.Desktop.ini
+
+# Keep for fast Docker (recommended — commit these):
+# !data/events/output.jsonl
+# !configs/generated/*.json

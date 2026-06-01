@@ -1,0 +1,298 @@
+{
+  "discovery_method": "motion_brightness_edge_heuristics",
+  "store_id": "ST1008",
+  "footage_dir": "CCTV Footage",
+  "cameras": [
+    {
+      "source_file": "CAM 1.mp4",
+      "camera_id": "CAM_FLOOR_1",
+      "role": "main_floor",
+      "confidence": 0.75,
+      "role_scores": {
+        "entry": 0.597,
+        "billing": 2.167,
+        "main_floor": 1.588,
+        "queue": 1.372
+      }
+    },
+    {
+      "source_file": "CAM 2.mp4",
+      "camera_id": "CAM_BILLING_01",
+      "role": "billing",
+      "confidence": 0.98,
+      "role_scores": {
+        "entry": 0.518,
+        "billing": 2.96,
+        "main_floor": 1.949,
+        "queue": 1.678
+      }
+    },
+    {
+      "source_file": "CAM 3.mp4",
+      "camera_id": "CAM_ENTRY_01",
+      "role": "entry",
+      "confidence": 0.976,
+      "role_scores": {
+        "entry": 2.758,
+        "billing": 0.716,
+        "main_floor": 0.614,
+        "queue": 0.53
+      }
+    },
+    {
+      "source_file": "CAM 4.mp4",
+      "camera_id": "CAM_FLOOR_4",
+      "role": "main_floor",
+      "confidence": 0.75,
+      "role_scores": {
+        "entry": 0.583,
+        "billing": 1.535,
+        "main_floor": 0.676,
+        "queue": 0.578
+      }
+    },
+    {
+      "source_file": "CAM 5.mp4",
+      "camera_id": "CAM_FLOOR_5",
+      "role": "main_floor",
+      "confidence": 0.75,
+      "role_scores": {
+        "entry": 0,
+        "billing": 2.297,
+        "main_floor": 1.48,
+        "queue": 1.274
+      }
+    }
+  ],
+  "overlap_notes": [
+    "Entry cam (glass door) overlaps with front-of-house floor cams.",
+    "Billing cam shares partial FOV with east-side floor traffic."
+  ],
+  "raw_features": [
+    {
+      "file": "CAM 1.mp4",
+      "width": 1920,
+      "height": 1080,
+      "frame_count": 4193,
+      "fps": 29.97002997002997,
+      "duration_sec": 139.90643333333333,
+      "frames": [
+        {
+          "frame_idx": 419,
+          "edge_density": 35.540010127314815,
+          "brightness": {
+            "left": 113.3743894675926,
+            "center": 132.7368995949074,
+            "right": 99.15798755787037
+          },
+          "screenshot": "data/discovery/screenshots/CAM_1_f419.jpg"
+        },
+        {
+          "frame_idx": 2096,
+          "edge_density": 35.252864583333334,
+          "brightness": {
+            "left": 112.84407986111111,
+            "center": 132.4464771412037,
+            "right": 92.94158130787036
+          },
+          "screenshot": "data/discovery/screenshots/CAM_1_f2096.jpg"
+        },
+        {
+          "frame_idx": 3773,
+          "edge_density": 36.030186631944446,
+          "brightness": {
+            "left": 112.40508825231481,
+            "center": 128.26480034722223,
+            "right": 89.13853298611112
+          },
+          "screenshot": "data/discovery/screenshots/CAM_1_f3773.jpg"
+        }
+      ],
+      "motion": {
+        "center": 23.71473298072815,
+        "left": 16.00934875011444,
+        "right": 21.090417647361754
+      }
+    },
+    {
+      "file": "CAM 2.mp4",
+      "width": 1920,
+      "height": 1080,
+      "frame_count": 3774,
+      "fps": 29.97002997002997,
+      "duration_sec": 125.9258,
+      "frames": [
+        {
+          "frame_idx": 377,
+          "edge_density": 39.42452980324074,
+          "brightness": {
+            "left": 115.75022424768518,
+            "center": 117.8579441550926,
+            "right": 96.23345920138888
+          },
+          "screenshot": "data/discovery/screenshots/CAM_2_f377.jpg"
+        },
+        {
+          "frame_idx": 1887,
+          "edge_density": 38.22712673611111,
+          "brightness": {
+            "left": 118.31959780092592,
+            "center": 110.21106336805556,
+            "right": 95.56877170138888
+          },
+          "screenshot": "data/discovery/screenshots/CAM_2_f1887.jpg"
+        },
+        {
+          "frame_idx": 3396,
+          "edge_density": 40.44546440972222,
+          "brightness": {
+            "left": 113.20170138888889,
+            "center": 123.28183304398148,
+            "right": 95.93901331018519
+          },
+          "screenshot": "data/discovery/screenshots/CAM_2_f3396.jpg"
+        }
+      ],
+      "motion": {
+        "center": 26.818568849563597,
+        "left": 22.59821834564209,
+        "right": 10.806315898895264
+      }
+    },
+    {
+      "file": "CAM 3.mp4",
+      "width": 1920,
+      "height": 1080,
+      "frame_count": 4436,
+      "fps": 29.97002997002997,
+      "duration_sec": 148.01453333333333,
+      "frames": [
+        {
+          "frame_idx": 443,
+          "edge_density": 13.888744212962964,
+          "brightness": {
+            "left": 129.51909577546297,
+            "center": 132.32603153935185,
+            "right": 47.299172453703704
+          },
+          "screenshot": "data/discovery/screenshots/CAM_3_f443.jpg"
+        },
+        {
+          "frame_idx": 2218,
+          "edge_density": 13.58462818287037,
+          "brightness": {
+            "left": 132.08538483796298,
+            "center": 132.04283998842592,
+            "right": 48.26624710648148
+          },
+          "screenshot": "data/discovery/screenshots/CAM_3_f2218.jpg"
+        },
+        {
+          "frame_idx": 3992,
+          "edge_density": 13.484526909722222,
+          "brightness": {
+            "left": 136.05726707175927,
+            "center": 131.20054832175927,
+            "right": 47.39428819444444
+          },
+          "screenshot": "data/discovery/screenshots/CAM_3_f3992.jpg"
+        }
+      ],
+      "motion": {
+        "center": 7.175554037094116,
+        "left": 6.825293529033661,
+        "right": 7.758282364904881
+      }
+    },
+    {
+      "file": "CAM 4.mp4",
+      "width": 1920,
+      "height": 1080,
+      "frame_count": 3647,
+      "fps": 24.98150532920514,
+      "duration_sec": 145.988,
+      "frames": [
+        {
+          "frame_idx": 364,
+          "edge_density": 10.273292824074074,
+          "brightness": {
+            "left": 79.60285445601852,
+            "center": 118.09871527777777,
+            "right": 86.36288917824074
+          },
+          "screenshot": "data/discovery/screenshots/CAM_4_f364.jpg"
+        },
+        {
+          "frame_idx": 1823,
+          "edge_density": 10.415697337962962,
+          "brightness": {
+            "left": 83.9123683449074,
+            "center": 119.58730613425926,
+            "right": 85.59523871527777
+          },
+          "screenshot": "data/discovery/screenshots/CAM_4_f1823.jpg"
+        },
+        {
+          "frame_idx": 3282,
+          "edge_density": 11.43933738425926,
+          "brightness": {
+            "left": 95.98940104166667,
+            "center": 129.16166087962964,
+            "right": 88.9901634837963
+          },
+          "screenshot": "data/discovery/screenshots/CAM_4_f3282.jpg"
+        }
+      ],
+      "motion": {
+        "center": 11.545410135388375,
+        "left": 15.34204005599022,
+        "right": 4.799493879079819
+      }
+    },
+    {
+      "file": "CAM 5.mp4",
+      "width": 1920,
+      "height": 1080,
+      "frame_count": 3465,
+      "fps": 24.98143515280852,
+      "duration_sec": 138.703,
+      "frames": [
+        {
+          "frame_idx": 346,
+          "edge_density": 29.638953993055555,
+          "brightness": {
+            "left": 114.3670167824074,
+            "center": 102.43276331018518,
+            "right": 123.90974971064814
+          },
+          "screenshot": "data/discovery/screenshots/CAM_5_f346.jpg"
+        },
+        {
+          "frame_idx": 1732,
+          "edge_density": 30.16712962962963,
+          "brightness": {
+            "left": 116.78903935185186,
+            "center": 107.60938657407408,
+            "right": 126.39998987268518
+          },
+          "screenshot": "data/discovery/screenshots/CAM_5_f1732.jpg"
+        },
+        {
+          "frame_idx": 3118,
+          "edge_density": 29.060481770833334,
+          "brightness": {
+            "left": 112.26458912037037,
+            "center": 106.45554542824074,
+            "right": 123.89541087962964
+          },
+          "screenshot": "data/discovery/screenshots/CAM_5_f3118.jpg"
+        }
+      ],
+      "motion": {
+        "center": 25.928631281852724,
+        "left": 20.581956148147583,
+        "right": 6.283000814914703
+      }
+    }
+  ]
+}
