@@ -1,4 +1,4 @@
-# Reviewer quick start (repo root = this folder):
+# Reviewer quick start (repo root = store-intelligence/):
 #   docker compose up --build
 services:
   api:
@@ -8,7 +8,8 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./CCTV Footage:/app/CCTV Footage:ro
+      - ../Store 1:/app/Store 1:ro
+      - ../Store 2:/app/Store 2:ro
       - ./data:/app/data
       - ./configs/generated:/app/configs/generated
     environment:

@@ -39,8 +39,27 @@ def event_to_row(ev: StoreEvent) -> EventRow:
 
 
 async def process_event_for_session(db: AsyncSession, row: EventRow) -> str:
-    """Attach session_id based on visitor entry/exit lifecycle."""
+    """Attach session_id based on visitor entry/exit lifecycle, reopening on REENTRY."""
     now = row.timestamp
+    
+    # Check if there is an active or prior session for this visitor
+    if row.event_type == "REENTRY":
+        result = await db.execute(
+            select(SessionRow)
+            .where(
+                SessionRow.store_id == row.store_id,
+                SessionRow.visitor_id == row.visitor_id,
+            )
+            .order_by(SessionRow.started_at.desc())
+            .limit(1)
+        )
+        session = result.scalar_one_or_none()
+        if session is not None:
+            # Reopen the session: clear ended_at so it is considered active/unclosed
+            session.ended_at = None
+            row.session_id = session.session_id
+            return session.session_id
+
     if row.event_type == "ENTRY":
         session_id = f"SES_{uuid.uuid4().hex[:12]}"
         db.add(

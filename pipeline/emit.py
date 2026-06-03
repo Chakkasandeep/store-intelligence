@@ -48,8 +48,10 @@ class EventWriter:
         self._fh.close()
 
 
-def clip_base_timestamp(filename: str) -> datetime:
-    """OSD shows 10/04/2026 ~20:09 — align pipeline clock to footage metadata."""
+def clip_base_timestamp(filename: str, store_id: str = "ST1008") -> datetime:
+    """Align pipeline clock to footage OSD dates per store."""
+    if store_id == "ST_STORE2" or any(k in filename.lower() for k in ["entry 1", "entry 2", "billing_area", "zone.mp4"]):
+        return datetime(2026, 3, 8, 18, 10, 0, tzinfo=timezone.utc)
     return datetime(2026, 4, 10, 20, 9, 0, tzinfo=timezone.utc)
 
 

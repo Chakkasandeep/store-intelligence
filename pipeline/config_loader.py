@@ -8,13 +8,24 @@ GENERATED = ROOT / "configs" / "generated"
 PROJECT = ROOT.parent
 
 
-def load_camera_profile() -> dict:
-    return json.loads((GENERATED / "camera_profile.json").read_text(encoding="utf-8"))
+def load_camera_profile(store_id: str = "ST1008") -> dict:
+    path = GENERATED / store_id / "camera_profile.json"
+    if not path.exists():
+        path = GENERATED / "camera_profile.json"  # fallback
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
-def load_store_layout() -> dict:
-    return json.loads((GENERATED / "store_layout.json").read_text(encoding="utf-8"))
+def load_store_layout(store_id: str = "ST1008") -> dict:
+    path = GENERATED / store_id / "store_layout.json"
+    if not path.exists():
+        path = GENERATED / "store_layout.json"  # fallback
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
-def footage_path(source_file: str) -> Path:
-    return PROJECT / "CCTV Footage" / source_file
+def footage_path(store_id: str, source_file: str) -> Path:
+    profile = load_camera_profile(store_id)
+    folder = profile.get("store_folder")
+    if not folder:
+        # Fallback heuristic based on store_id
+        folder = "Store 1" if store_id == "ST1008" else "Store 2"
+    return PROJECT / folder / source_file

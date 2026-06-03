@@ -1,68 +1,45 @@
-<div align="center">
-
-# 🏪 Store Intelligence
+# 🏪 Store Intelligence System
 
 ### Raw CCTV → Computer Vision → Live Retail Analytics API
 
 **Purplle Tech Challenge 2026 · Round 2** · Apex Retail offline stores  
-**Store ST1008** · Brigade Road, Bangalore · 5 cameras
-
-<br/>
-
-[![Docker](https://img.shields.io/badge/Docker-compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)](docker-compose.yml)
-[![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](backend/main.py)
-[![YOLOv8](https://img.shields.io/badge/YOLOv8n-ByteTrack-FF6F00?style=for-the-badge)](pipeline/run_pipeline.py)
-[![React](https://img.shields.io/badge/Dashboard-React-61DAFB?style=for-the-badge&logo=react&logoColor=black)](dashboard/)
-[![Tests](https://img.shields.io/badge/Tests-pytest-0A0A0A?style=for-the-badge)](tests/)
-[![SQLite](https://img.shields.io/badge/DB-SQLite-003B57?style=for-the-badge)](backend/db.py)
-
-<br/>
-
-**[🚀 Live Demo on Hugging Face](https://huggingface.co/spaces/SandeepChakka/store-intelligence)** &nbsp;·&nbsp;
-**[📖 API Docs](https://huggingface.co/spaces/SandeepChakka/store-intelligence/docs)** &nbsp;·&nbsp;
-**[✅ Evaluation Map](EVALUATION_ALIGNMENT.md)**
-
-<br/>
-
-*End-to-end system: detection, tracking, session funnel, POS correlation, anomalies — built for real-world ambiguity, not lab-perfect accuracy.*
-
-</div>
+**Store ST1008** (Brigade Road, Bangalore) & **Store ST_STORE2** (Second Location)
 
 ---
 
-## 👋 For reviewers (10-minute path)
+## 👋 Quick Start (Docker — Recommended)
 
-| Step | Time | Action |
-|------|------|--------|
-| 1 | 2 min | `docker compose up --build` |
-| 2 | 1 min | Open **http://localhost:8000/stores/ST1008/metrics** |
-| 3 | 1 min | Open **http://localhost:5173** (dashboard) |
-| 4 | 2 min | Skim **[DESIGN.md](DESIGN.md)** + **[CHOICES.md](CHOICES.md)** |
-| 5 | 2 min | Inspect **`data/events/output.jsonl`** (69 structured events) |
-| 6 | 2 min | `pytest tests/ -v` (12 tests) |
+Start the entire system (FastAPI backend + SQLite database + React dashboard) with a single command:
 
-**No manual steps.** Pre-committed `output.jsonl` skips the 20+ min YOLO run on review hardware. Optional: mount `CCTV Footage/` to re-run the pipeline (see [RUN_GUIDE.md](RUN_GUIDE.md)).
+```bash
+cd store-intelligence
+docker compose up --build
+```
 
-Full rubric mapping → **[EVALUATION_ALIGNMENT.md](EVALUATION_ALIGNMENT.md)**
+### Active URLs:
+- **API**: http://localhost:8000
+- **API Swagger Docs**: http://localhost:8000/docs
+- **React Dashboard**: http://localhost:5173
+- **Store 1 Metrics**: http://localhost:8000/stores/ST1008/metrics
+- **Store 2 Metrics**: http://localhost:8000/stores/ST_STORE2/metrics
 
----
-
-## ✨ What this system does
-
-Apex Retail has **40 stores** with no offline analytics. This project closes that gap for one real store:
-
-| Stage | You get |
-|-------|---------|
-| **Detection** | YOLOv8n + ByteTrack on 5 CCTV clips |
-| **Intelligence** | ENTRY/EXIT, zones, queue, billing, staff flags |
-| **API** | Real-time metrics, session funnel, heatmap, anomalies |
-| **Dashboard** | Live React UI + WebSocket metrics stream |
-
-**North-star metric:** *Offline conversion rate* = purchasing sessions ÷ unique visitor sessions (staff excluded).
+No manual setup required. Store configurations, POS transactions, and sample events are automatically discovered, mapped, and bootstrapped into the database.
 
 ---
 
-## 🏗 Architecture
+## ✨ Features
+
+- **Multi-Store Config-Driven Design**: Discovers cameras, layout PNGs, and POS transaction files dynamically, saving metadata under `configs/generated/{store_id}/`.
+- **YOLOv8n + ByteTrack CV Pipeline**: Processes footage on CPU, maps bounding boxes to dynamic layout polygons, and tracks visitor movements.
+- **Visitor Re-Entry and Session Reopening**: Resumes visitor sessions upon `REENTRY` instead of double-counting visitors in the conversion funnel.
+- **Advanced Event Extraction**: Emits `ENTRY`, `EXIT`, `ZONE_ENTER`, `ZONE_EXIT`, `ZONE_DWELL`, `BILLING_QUEUE_JOIN`, `BILLING_QUEUE_ABANDON`, and `REENTRY` events.
+- **Legacy Ingestion Adaptor**: Automatically normalizes legacy/sample JSONL shapes (like `sample_eventsbe42122.jsonl` with `id_token` and `event_timestamp`) on ingest.
+- **Queue Abandonment Verification**: Automatically prunes `BILLING_QUEUE_ABANDON` events if the customer correlates with a subsequent POS purchase.
+- **Real-time Live Metrics Dashboard**: Built in React + TypeScript with standard design tokens, providing store selection dropdowns and real-time WebSocket feeds.
+
+---
+
+## 🏗 System Architecture
 
 ```mermaid
 flowchart LR
@@ -75,186 +52,52 @@ flowchart LR
     H[🧾 POS CSV] --> D
 ```
 
-| Principle | How we implement it |
-|-----------|---------------------|
-| **No hardcoded store IDs** | Discovery scripts → `configs/generated/` |
-| **Session funnel** | `sessions` table — no double-counting re-entries |
-| **Staff handling** | Trajectory + multi-zone heuristics |
-| **Production-aware** | Structured logs, health checks, idempotent ingest |
-| **CPU-first** | YOLOv8**n**, frame stride 8 — runs on Intel i5 |
-
 ---
 
-## 🚦 Acceptance gate (mandatory)
+## ⚡ Local Development & Setup
 
-| Check | Status | Proof |
-|-------|--------|-------|
-| `docker compose up` | ✅ | [docker-compose.yml](docker-compose.yml) |
-| `/metrics` JSON | ✅ | `GET /stores/ST1008/metrics` |
-| Structured events | ✅ | [data/events/output.jsonl](data/events/output.jsonl) |
-| DESIGN.md + CHOICES.md | ✅ | Non-trivial engineering docs |
-| Stability | ✅ | Healthcheck + 12 pytest tests |
-
----
-
-## ⚡ Quick start (Docker — recommended)
-
-```bash
-git clone https://github.com/Chakkasandeep/store-intelligence.git
-cd store-intelligence
-docker compose up --build
-```
-
-| Service | URL |
-|---------|-----|
-| **API** | http://localhost:8000 |
-| **Swagger** | http://localhost:8000/docs |
-| **Metrics** | http://localhost:8000/stores/ST1008/metrics |
-| **Dashboard** | http://localhost:5173 |
-
-```bash
-# Smoke test
-curl -s http://localhost:8000/health
-curl -s http://localhost:8000/stores/ST1008/metrics
-curl -s http://localhost:8000/stores/ST1008/funnel
-```
-
----
-
-## 🛠 Local development (Intel i5)
-
+### 1. Environment Activation
 ```bash
 python -m venv venv
-source venv/bin/activate          # Windows: venv\Scripts\activate
+.\venv\Scripts\Activate.ps1   # Linux: source venv/bin/activate
 pip install -r requirements.txt
 pip install -r requirements-dev.txt
+```
 
+### 2. Run Store Discovery
+Scans directories and generates store layouts and camera roles:
+```bash
 python scripts/discover_all.py
-python pipeline/run_pipeline.py --frame-stride 8 --max-frames 600
-
-export PYTHONPATH=.
-uvicorn backend.main:app --port 8000
 ```
+
+### 3. Run Pipeline
+Processes video feeds and saves tracking outputs:
+```bash
+# Process Store 1
+python pipeline/run_pipeline.py --store-id ST1008 --frame-stride 8 --max-frames 600
+
+# Process Store 2
+python pipeline/run_pipeline.py --store-id ST_STORE2 --frame-stride 8 --max-frames 600
+```
+
+### 4. Run API & Dashboard
+```bash
+# Terminal 1: API
+$env:PYTHONPATH="."
+uvicorn backend.main:app --reload --port 8000
+
+# Terminal 2: React Dashboard
+cd dashboard
+npm install
+npm run dev
+```
+
+---
+
+## 🧪 Testing
+
+Execute the full test suite verifying ingest idempotency, legacy schema normalization, session reopening, staff exclusion, and anomalies:
 
 ```bash
-# Terminal 2 — dashboard
-cd dashboard && npm install && npm run dev
+python -m pytest tests/ -v
 ```
-
-**Optional CCTV:** Place challenge videos in `./CCTV Footage/` (CAM 1.mp4 … CAM 5.mp4).  
-**Optional POS:** Place Brigade CSV in repo root for discovery re-run.
-
-Detailed steps → **[RUN_GUIDE.md](RUN_GUIDE.md)**
-
----
-
-## 📡 API reference
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/events/ingest` | Idempotent event ingest (`event_id`) |
-| `GET` | `/stores/{id}/metrics` | Visitors, conversion, queue depth |
-| `GET` | `/stores/{id}/funnel` | Session-based drop-off funnel |
-| `GET` | `/stores/{id}/heatmap` | Zone dwell intensity |
-| `GET` | `/stores/{id}/anomalies` | Queue spike, stale feed, conversion drop |
-| `GET` | `/health` | Component health + feed freshness |
-| `WS` | `/ws/metrics` | Live metrics stream (5s interval) |
-
-Store ID **`ST1008`** is discovered from POS data — not hardcoded in pipeline logic.
-
----
-
-## 📂 Repository layout
-
-```
-store-intelligence/
-├── backend/              # FastAPI · metrics · funnel · anomalies
-├── pipeline/             # YOLOv8n · ByteTrack · Re-ID · event emit
-├── dashboard/            # React + Vite + Tailwind + Recharts
-├── scripts/              # discover_* · count_events · analyze_videos
-├── configs/generated/    # Data-driven JSON (camera, layout, POS)
-├── data/events/          # output.jsonl (committed for fast Docker)
-├── tests/                # 12 pytest tests
-├── docker/               # Dockerfile + entrypoint
-├── DESIGN.md             # Architecture & event flow
-├── CHOICES.md            # Trade-offs & AI decisions
-└── EVALUATION_ALIGNMENT.md
-```
-
----
-
-## 📚 Documentation index
-
-| Document | Purpose |
-|----------|---------|
-| [DESIGN.md](DESIGN.md) | System architecture, DB schema, AI decisions |
-| [CHOICES.md](CHOICES.md) | Model/API trade-offs (accepted vs rejected) |
-| [EVALUATION_ALIGNMENT.md](EVALUATION_ALIGNMENT.md) | Maps 100-mark rubric → code |
-| [SUBMISSION_CHECKLIST.md](SUBMISSION_CHECKLIST.md) | Pre-submit verification |
-| [RUN_GUIDE.md](RUN_GUIDE.md) | Full install + Docker + validation |
-| [COMMANDS.md](COMMANDS.md) | Command cheat sheet |
-| [docs/CAMERA_ANALYSIS.md](docs/CAMERA_ANALYSIS.md) | Camera role inference |
-| [docs/POS_MAPPING.md](docs/POS_MAPPING.md) | POS correlation rules |
-
----
-
-## 🌐 Live demo (no CCTV in cloud)
-
-**Hugging Face Space:** https://huggingface.co/spaces/SandeepChakka/store-intelligence  
-
-API + dashboard on one URL (port 7860). Pre-ingested events — instant boot.  
-Raw `.mp4` files stay local per challenge licence.
-
----
-
-## 🧪 Tests
-
-```bash
-pip install -r requirements-dev.txt
-export PYTHONPATH=.
-pytest tests/ -v
-```
-
-Covers: ingest idempotency, session funnel, staff exclusion, anomalies, pipeline schema.
-
----
-
-## ⚠️ Known demo behaviors (documented)
-
-| Observation | Why |
-|-------------|-----|
-| Current visitors = 0 | Historical CCTV timestamps (Apr 2026) |
-| Conversion 0% possible | POS clock vs clip window misalignment |
-| STALE_FEED | Suppressed for historical clip dates |
-
-Explained in [CHOICES.md](CHOICES.md) — not hidden edge cases.
-
----
-
-## 🔒 Integrity
-
-- Metrics are **computed from SQLite** after ingest — not hardcoded JSON responses.
-- Re-running the pipeline or ingesting new events **changes** API outputs.
-- Committed `output.jsonl` is a **reviewer convenience**; full CV source is in `pipeline/`.
-
----
-
-## 👤 Author
-
-**Sandeep Chakka**  
-Purplle Tech Challenge 2026 · Round 2 · Store Intelligence
-
-| Channel | Link |
-|---------|------|
-| **GitHub (this repo)** | Primary submission — `docker compose up` |
-| **Hugging Face** | [Live demo](https://huggingface.co/spaces/SandeepChakka/store-intelligence) |
-
----
-
-<div align="center">
-
-**If it runs with `docker compose up` and `/stores/ST1008/metrics` returns JSON — you're looking at the complete pipeline.**
-
-⭐ *Built with engineering judgment over model complexity.*
-
-</div>

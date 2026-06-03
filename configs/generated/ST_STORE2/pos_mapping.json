@@ -1,0 +1,38 @@
+{
+  "source_file": "synthetic_generator",
+  "store_id": "ST_STORE2",
+  "store_name": "Store_2_Mall",
+  "city": "Bangalore",
+  "date": "08-03-2026",
+  "schema": {
+    "transaction_key": "order_id",
+    "timestamp_columns": [
+      "timestamp"
+    ],
+    "amount_column": "nmv"
+  },
+  "stats": {
+    "line_items": 9,
+    "unique_orders": 5,
+    "unique_invoices": 5,
+    "time_min": "18:11:30",
+    "time_max": "18:22:10",
+    "total_nmv_inr": 6210.0
+  },
+  "staff_candidates": [
+    {
+      "salesperson_id": 901,
+      "employee_code": "EMP_ST2_01",
+      "salesperson_name": "Staff A",
+      "line_count": 5
+    },
+    {
+      "salesperson_id": 902,
+      "employee_code": "EMP_ST2_02",
+      "salesperson_name": "Staff B",
+      "line_count": 4
+    }
+  ],
+  "conversion_window_minutes": 5,
+  "confidence": 0.8
+}

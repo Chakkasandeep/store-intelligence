@@ -1,7 +1,7 @@
 {
-  "store_id": "ST1008",
-  "store_name": "Brigade_Bangalore",
-  "source": "ST1008.png",
+  "store_id": "ST_STORE2",
+  "store_name": "Store_2_Mall",
+  "source": "ST_STORE2.png",
   "open_hours_local": {
     "open": "10:00",
     "close": "22:00"
@@ -213,16 +213,16 @@
       "ENTRY_EXIT",
       "FOH_CENTER"
     ],
+    "CAM_ENTRY_02": [
+      "ENTRY_EXIT",
+      "FOH_CENTER"
+    ],
     "CAM_BILLING_01": [
-      "BILLING",
-      "ACCESSORIES"
+      "BILLING"
     ],
     "CAM_FLOOR_01": [
       "FOH_CENTER",
-      "SKIN_NORTH"
-    ],
-    "CAM_FLOOR_02": [
-      "FOH_CENTER",
+      "SKIN_NORTH",
       "MAKEUP_SOUTH"
     ]
   },

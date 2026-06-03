@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
 
-from sqlalchemy import func, select
+from sqlalchemy import func, select, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.analytics_window import get_analytics_window
@@ -121,7 +121,7 @@ async def compute_metrics(db: AsyncSession, store_id: str) -> MetricsResponse:
 
 
 async def sync_pos_conversions(db: AsyncSession, store_id: str) -> None:
-    """Mark sessions converted when billing visit precedes POS txn within window."""
+    """Mark sessions converted when billing visit precedes POS txn within window, clearing abandonment events."""
     settings = get_settings()
     window = timedelta(minutes=settings.conversion_window_minutes)
     txns = (
@@ -134,13 +134,28 @@ async def sync_pos_conversions(db: AsyncSession, store_id: str) -> None:
     sessions = (
         await db.execute(select(SessionRow).where(SessionRow.store_id == store_id))
     ).scalars().all()
+    
+    any_modified = False
     for txn in txns:
         for ses in sessions:
             if ses.is_staff or ses.converted or not ses.billing_visited:
                 continue
             if ses.started_at <= txn.timestamp <= ses.started_at + window:
                 ses.converted = True
-    await db.commit()
+                any_modified = True
+                
+                # Delete queue abandonment events for this visitor if they purchased
+                await db.execute(
+                    delete(EventRow).where(
+                        EventRow.store_id == store_id,
+                        EventRow.visitor_id == ses.visitor_id,
+                        EventRow.event_type == "BILLING_QUEUE_ABANDON",
+                        EventRow.timestamp >= ses.started_at - timedelta(minutes=2),
+                        EventRow.timestamp <= txn.timestamp + timedelta(minutes=2)
+                    )
+                )
+    if any_modified:
+        await db.commit()
 
 
 async def load_pos_transactions(db: AsyncSession, store_id: str) -> int:
@@ -149,9 +164,13 @@ async def load_pos_transactions(db: AsyncSession, store_id: str) -> int:
 
     from backend.config import ROOT as SI_ROOT
 
-    path = SI_ROOT / "configs" / "generated" / "pos_transactions_derived.csv"
+    path = SI_ROOT / "configs" / "generated" / store_id / "pos_transactions_derived.csv"
+    if not path.exists():
+        # back-compatible fallback
+        path = SI_ROOT / "configs" / "generated" / "pos_transactions_derived.csv"
     if not path.exists():
         return 0
+        
     df = pd.read_csv(path)
     count = 0
     for _, row in df.iterrows():

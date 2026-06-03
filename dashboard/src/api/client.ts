@@ -1,4 +1,4 @@
-import { apiUrl, STORE_ID } from '../config';
+import { apiUrl, getSelectedStoreId } from '../config';
 import {
   normalizeAnomalies,
   normalizeFunnel,
@@ -32,28 +32,28 @@ async function fetchJson<T>(path: string, init?: RequestInit): Promise<T> {
   return res.json() as Promise<T>;
 }
 
-export async function getStoreMetrics(storeId = STORE_ID): Promise<StoreMetrics> {
+export async function getStoreMetrics(storeId = getSelectedStoreId()): Promise<StoreMetrics> {
   const raw = await fetchJson<Record<string, unknown>>(
-    `/stores/${encodeURIComponent(storeId)}/metrics`,
+        `/stores/${encodeURIComponent(storeId)}/metrics`,
   );
   return normalizeMetrics(raw);
 }
 
-export async function getStoreFunnel(storeId = STORE_ID): Promise<StoreFunnel> {
+export async function getStoreFunnel(storeId = getSelectedStoreId()): Promise<StoreFunnel> {
   const raw = await fetchJson<Record<string, unknown>>(
     `/stores/${encodeURIComponent(storeId)}/funnel`,
   );
   return normalizeFunnel(raw);
 }
 
-export async function getStoreHeatmap(storeId = STORE_ID): Promise<StoreHeatmap> {
+export async function getStoreHeatmap(storeId = getSelectedStoreId()): Promise<StoreHeatmap> {
   const raw = await fetchJson<Record<string, unknown>>(
     `/stores/${encodeURIComponent(storeId)}/heatmap`,
   );
   return normalizeHeatmap(raw);
 }
 
-export async function getStoreAnomalies(storeId = STORE_ID): Promise<StoreAnomalies> {
+export async function getStoreAnomalies(storeId = getSelectedStoreId()): Promise<StoreAnomalies> {
   const raw = await fetchJson<Record<string, unknown>>(
     `/stores/${encodeURIComponent(storeId)}/anomalies`,
   );

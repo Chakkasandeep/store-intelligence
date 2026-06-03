@@ -26,12 +26,27 @@ def get_settings() -> Settings:
     return Settings()
 
 
-def load_json_config(name: str) -> dict:
-    path = GENERATED / name
+def load_json_config(name: str, store_id: str = "ST1008") -> dict:
+    path = GENERATED / store_id / name
+    if not path.exists():
+        path = GENERATED / name  # fallback
     if not path.exists():
         raise FileNotFoundError(f"Missing {path}. Run: python scripts/discover_all.py")
     return json.loads(path.read_text(encoding="utf-8"))
 
 
 def store_id() -> str:
-    return load_json_config("pos_mapping.json").get("store_id", "ST1008")
+    # Deprecated single store getter - falls back to first discovered store
+    stores = active_stores()
+    return stores[0] if stores else "ST1008"
+
+
+def active_stores() -> list[str]:
+    """Dynamically scan generated config registry for active store IDs."""
+    if not GENERATED.exists():
+        return ["ST1008"]
+    stores = []
+    for p in GENERATED.iterdir():
+        if p.is_dir() and (p / "pos_mapping.json").exists():
+            stores.append(p.name)
+    return sorted(stores) if stores else ["ST1008"]

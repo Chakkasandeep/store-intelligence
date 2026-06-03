@@ -1,58 +1,56 @@
-# Commands — Store Intelligence
+# Commands — Store Intelligence System
 
-## Python virtual environment
+This document outlines the standard commands to configure, execute, test, and run the Store Intelligence System.
 
-```bash
-python -m venv .venv
-```
-
-**Windows:**
+## Python Environment Setup
 
 ```bash
-.venv\Scripts\activate
-```
+# Create venv
+python -m venv venv
 
-**Linux/macOS:**
+# Activate (Windows PowerShell)
+.\venv\Scripts\Activate.ps1
 
-```bash
-source .venv/bin/activate
-```
-
-```bash
+# Install requirements
 pip install -r requirements.txt
 pip install -r requirements-dev.txt
 ```
 
-## Discovery (run before pipeline/API)
+## 1. Dynamic Store Discovery
+
+Discovers POS schemas, video cameras, layouts, and generates configs under `configs/generated/{store_id}/` for all detected stores.
 
 ```bash
-cd store-intelligence
 python scripts/discover_all.py
-python scripts/analyze_videos.py
 ```
 
-## Run detection pipeline
+## 2. Run Computer Vision Pipeline
 
-Full clips (slow on i5):
+Processes footage with YOLOv8n + ByteTrack and emits challenge events.
 
 ```bash
-python pipeline/run_pipeline.py --output data/events/output.jsonl
+# Process Store 1 (ST1008)
+python pipeline/run_pipeline.py --store-id ST1008 --frame-stride 8 --max-frames 600
+
+# Process Store 2 (ST_STORE2)
+python pipeline/run_pipeline.py --store-id ST_STORE2 --frame-stride 8 --max-frames 600
 ```
 
-CPU-friendly profile:
+## 3. Run FastAPI Backend
+
+Launches the REST API server.
 
 ```bash
-python pipeline/run_pipeline.py --frame-stride 8 --max-frames 600 --output data/events/output.jsonl
-```
+# Set environment path
+$env:PYTHONPATH="."
 
-## Run API
-
-```bash
-set PYTHONPATH=.
+# Launch API
 uvicorn backend.main:app --reload --port 8000
 ```
 
-## Run dashboard
+## 4. Run React Dashboard
+
+Launches the live metrics frontend.
 
 ```bash
 cd dashboard
@@ -60,52 +58,25 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:5173
+Open dashboard at: **http://localhost:5173**
 
-## Run tests
+## 5. Run Automated Tests
 
-```bash
-pytest tests/ -v --cov=backend --cov=pipeline --cov-report=term-missing
-```
-
-## Generate events (discovery + pipeline)
+Executes the test suite verifying schemas, metrics, normalizer, and re-entry handling.
 
 ```bash
-python scripts/discover_all.py && python pipeline/run_pipeline.py --frame-stride 8 --max-frames 600
+python -m pytest tests/ -v
 ```
 
-## Replay events into API
+## 6. Docker Compose Quickstart
 
-```bash
-curl -X POST http://localhost:8000/events/ingest -H "Content-Type: application/json" --data-binary "@data/events/output.jsonl"
-```
-
-Or rely on API bootstrap (`EVENTS_JSONL` env) on startup.
-
-## Health checks
-
-```bash
-curl http://localhost:8000/health
-curl http://localhost:8000/stores/ST1008/metrics
-curl http://localhost:8000/stores/ST1008/funnel
-curl http://localhost:8000/stores/ST1008/heatmap
-curl http://localhost:8000/stores/ST1008/anomalies
-```
-
-## Docker
-
-From `store-intelligence/`:
+Builds and runs all components in a containerized environment:
 
 ```bash
 docker compose up --build
 ```
 
-- API: http://localhost:8000  
-- Dashboard: http://localhost:5173  
-- Docs: http://localhost:8000/docs  
-
-## WebSocket
-
-```
-ws://localhost:8000/ws/metrics?store_id=ST1008
-```
+- API docs: **http://localhost:8000/docs**
+- Health status: **http://localhost:8000/health**
+- Store 1 metrics: **http://localhost:8000/stores/ST1008/metrics**
+- Store 2 metrics: **http://localhost:8000/stores/ST_STORE2/metrics**

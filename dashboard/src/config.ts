@@ -1,5 +1,4 @@
 const rawApi = import.meta.env.VITE_API_URL?.trim();
-const rawStore = import.meta.env.VITE_STORE_ID?.trim();
 
 /** Empty in production build = same origin (HF Space / single-container Docker). */
 export const API_BASE_URL =
@@ -8,7 +7,23 @@ export const API_BASE_URL =
     : import.meta.env.PROD
       ? ''
       : 'http://localhost:8000';
-export const STORE_ID = rawStore && rawStore.length > 0 ? rawStore : 'ST1008';
+
+export function getSelectedStoreId(): string {
+  if (typeof localStorage !== 'undefined') {
+    const saved = localStorage.getItem('selected_store_id');
+    if (saved) return saved;
+  }
+  const rawStore = import.meta.env.VITE_STORE_ID?.trim();
+  return rawStore && rawStore.length > 0 ? rawStore : 'ST1008';
+}
+
+export const STORE_ID = getSelectedStoreId();
+
+export function setSelectedStoreId(id: string): void {
+  if (typeof localStorage !== 'undefined') {
+    localStorage.setItem('selected_store_id', id);
+  }
+}
 
 export function apiUrl(path: string): string {
   const normalized = path.startsWith('/') ? path : `/${path}`;

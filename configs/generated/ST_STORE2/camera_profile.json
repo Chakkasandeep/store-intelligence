@@ -1,0 +1,52 @@
+{
+  "discovery_method": "features_json_and_fallbacks",
+  "store_id": "ST_STORE2",
+  "store_folder": "Store 2",
+  "footage_dir": "Store 2",
+  "cameras": [
+    {
+      "source_file": "billing_area.mp4",
+      "camera_id": "CAM_BILLING_01",
+      "role": "billing",
+      "confidence": 0.95,
+      "width": 960,
+      "frame_count": 3126,
+      "fps": 25.0,
+      "reasoning": "Visual audit override matching physical counter/signage"
+    },
+    {
+      "source_file": "entry 1.mp4",
+      "camera_id": "CAM_ENTRY_01",
+      "role": "entry",
+      "confidence": 0.95,
+      "width": 960,
+      "frame_count": 2636,
+      "fps": 25.0,
+      "reasoning": "Visual audit override matching physical counter/signage"
+    },
+    {
+      "source_file": "entry 2.mp4",
+      "camera_id": "CAM_ENTRY_02",
+      "role": "entry",
+      "confidence": 0.95,
+      "width": 960,
+      "frame_count": 2129,
+      "fps": 25.0,
+      "reasoning": "Visual audit override matching physical counter/signage"
+    },
+    {
+      "source_file": "zone.mp4",
+      "camera_id": "CAM_FLOOR_01",
+      "role": "main_floor",
+      "confidence": 0.95,
+      "width": 960,
+      "frame_count": 2898,
+      "fps": 25.0,
+      "reasoning": "Visual audit override matching physical counter/signage"
+    }
+  ],
+  "overlap_notes": [
+    "Entry camera views overlap with front of house traffic.",
+    "Billing queue areas partially captured by floor cameras."
+  ]
+}

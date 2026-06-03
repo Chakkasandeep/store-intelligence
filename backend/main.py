@@ -35,7 +35,7 @@ from backend.static_ui import register_dashboard_ui
 configure_logging(get_settings().log_level)
 logger = structlog.get_logger()
 
-_connections: set[WebSocket] = set()
+_connections: dict[WebSocket, str] = {}
 
 
 @asynccontextmanager
@@ -120,8 +120,8 @@ async def get_health(db: AsyncSession = Depends(get_db)) -> HealthResponse:
 @app.websocket("/ws/metrics")
 async def ws_metrics(websocket: WebSocket):
     await websocket.accept()
-    _connections.add(websocket)
     sid = websocket.query_params.get("store_id") or default_store_id()
+    _connections[websocket] = sid
     try:
         import asyncio
 
@@ -135,7 +135,7 @@ async def ws_metrics(websocket: WebSocket):
     except WebSocketDisconnect:
         pass
     finally:
-        _connections.discard(websocket)
+        _connections.pop(websocket, None)
 
 
 from backend.db import AsyncSessionLocal  # noqa: E402
@@ -151,10 +151,11 @@ async def _broadcast_metrics(sid: str) -> None:
     async with AsyncSessionLocal() as db:
         payload = (await compute_metrics(db, sid)).model_dump(mode="json")
     dead = []
-    for ws in _connections:
-        try:
-            await ws.send_json(payload)
-        except Exception:
-            dead.append(ws)
+    for ws, ws_sid in list(_connections.items()):
+        if ws_sid == sid:
+            try:
+                await ws.send_json(payload)
+            except Exception:
+                dead.append(ws)
     for ws in dead:
-        _connections.discard(ws)
+        _connections.pop(ws, None)

@@ -1,0 +1,246 @@
+{
+  "Store 1": [
+    {
+      "file": "CAM 1 - zone.mp4",
+      "width": 1920,
+      "frame_count": 4193,
+      "fps": 29.97,
+      "duration_sec": 139.9,
+      "motion": {
+        "left": 9.72,
+        "center": 17.57,
+        "right": 16.65
+      },
+      "brightness": {
+        "left": 112.0,
+        "center": 131.1,
+        "right": 88.1
+      },
+      "edge_density": 35.39,
+      "right_edge_density": 25.42,
+      "brightness_asymmetry": 23.9,
+      "screenshot": "store-intelligence/docs/audit_screenshots/CAM_1_zone_mid.jpg",
+      "role_scores": {
+        "entry": 0.597,
+        "billing": 2.167,
+        "main_floor": 1.588,
+        "queue": 1.372
+      },
+      "classified_role": "MAIN_FLOOR_CAMERA",
+      "confidence": 0.529,
+      "reasoning": "Aisle/shelf coverage: high edge density and sustained center motion"
+    },
+    {
+      "file": "CAM 2 - zone.mp4",
+      "width": 1920,
+      "frame_count": 3774,
+      "fps": 29.97,
+      "duration_sec": 125.9,
+      "motion": {
+        "left": 19.19,
+        "center": 24.2,
+        "right": 9.14
+      },
+      "brightness": {
+        "left": 114.1,
+        "center": 118.7,
+        "right": 93.4
+      },
+      "edge_density": 39.22,
+      "right_edge_density": 41.24,
+      "brightness_asymmetry": 20.7,
+      "screenshot": "store-intelligence/docs/audit_screenshots/CAM_2_zone_mid.jpg",
+      "role_scores": {
+        "entry": 0.517,
+        "billing": 2.96,
+        "main_floor": 1.948,
+        "queue": 1.678
+      },
+      "classified_role": "BILLING_CAMERA",
+      "confidence": 0.846,
+      "reasoning": "Highest billing heuristic: POS/counter edges on right third, elevated center motion in queue lane"
+    },
+    {
+      "file": "CAM 3 - entry.mp4",
+      "width": 1920,
+      "frame_count": 4436,
+      "fps": 29.97,
+      "duration_sec": 148.0,
+      "motion": {
+        "left": 7.06,
+        "center": 6.82,
+        "right": 6.5
+      },
+      "brightness": {
+        "left": 133.3,
+        "center": 130.1,
+        "right": 47.5
+      },
+      "edge_density": 13.63,
+      "right_edge_density": 2.77,
+      "brightness_asymmetry": 85.76,
+      "screenshot": "store-intelligence/docs/audit_screenshots/CAM_3_entry_mid.jpg",
+      "role_scores": {
+        "entry": 2.758,
+        "billing": 0.716,
+        "main_floor": 0.614,
+        "queue": 0.53
+      },
+      "classified_role": "ENTRY_CAMERA",
+      "confidence": 0.788,
+      "reasoning": "Highest entry heuristic: door/glass brightness asymmetry, lower edge density, threshold-fixed framing"
+    },
+    {
+      "file": "CAM 5 - billing.mp4",
+      "width": 1920,
+      "frame_count": 3465,
+      "fps": 24.98,
+      "duration_sec": 138.7,
+      "motion": {
+        "left": 14.83,
+        "center": 18.89,
+        "right": 4.34
+      },
+      "brightness": {
+        "left": 112.3,
+        "center": 105.0,
+        "right": 124.9
+      },
+      "edge_density": 28.97,
+      "right_edge_density": 18.78,
+      "brightness_asymmetry": -12.65,
+      "screenshot": "store-intelligence/docs/audit_screenshots/CAM_5_billing_mid.jpg",
+      "role_scores": {
+        "entry": 0,
+        "billing": 2.296,
+        "main_floor": 1.48,
+        "queue": 1.273
+      },
+      "classified_role": "MAIN_FLOOR_CAMERA",
+      "confidence": 0.493,
+      "reasoning": "Aisle/shelf coverage: high edge density and sustained center motion"
+    }
+  ],
+  "Store 2": [
+    {
+      "file": "billing_area.mp4",
+      "width": 960,
+      "frame_count": 3126,
+      "fps": 25.0,
+      "duration_sec": 125.0,
+      "motion": {
+        "left": 6.93,
+        "center": 17.58,
+        "right": 10.71
+      },
+      "brightness": {
+        "left": 118.7,
+        "center": 123.1,
+        "right": 123.3
+      },
+      "edge_density": 35.87,
+      "right_edge_density": 33.06,
+      "brightness_asymmetry": -4.61,
+      "screenshot": "store-intelligence/docs/audit_screenshots/billing_area_mid.jpg",
+      "role_scores": {
+        "entry": 0,
+        "billing": 2.716,
+        "main_floor": 1.6,
+        "queue": 1.383
+      },
+      "classified_role": "MAIN_FLOOR_CAMERA",
+      "confidence": 0.533,
+      "reasoning": "Aisle/shelf coverage: high edge density and sustained center motion"
+    },
+    {
+      "file": "entry 1.mp4",
+      "width": 960,
+      "frame_count": 2636,
+      "fps": 25.0,
+      "duration_sec": 105.4,
+      "motion": {
+        "left": 8.74,
+        "center": 14.5,
+        "right": 11.93
+      },
+      "brightness": {
+        "left": 119.0,
+        "center": 143.5,
+        "right": 119.9
+      },
+      "edge_density": 27.99,
+      "right_edge_density": 25.51,
+      "brightness_asymmetry": -0.89,
+      "screenshot": "store-intelligence/docs/audit_screenshots/entry_1_mid.jpg",
+      "role_scores": {
+        "entry": 0,
+        "billing": 2.333,
+        "main_floor": 1.28,
+        "queue": 1.105
+      },
+      "classified_role": "MAIN_FLOOR_CAMERA",
+      "confidence": 0.427,
+      "reasoning": "Aisle/shelf coverage: high edge density and sustained center motion"
+    },
+    {
+      "file": "entry 2.mp4",
+      "width": 960,
+      "frame_count": 2129,
+      "fps": 25.0,
+      "duration_sec": 85.2,
+      "motion": {
+        "left": 11.6,
+        "center": 31.44,
+        "right": 16.96
+      },
+      "brightness": {
+        "left": 129.7,
+        "center": 139.0,
+        "right": 118.5
+      },
+      "edge_density": 20.31,
+      "right_edge_density": 21.51,
+      "brightness_asymmetry": 11.13,
+      "screenshot": "store-intelligence/docs/audit_screenshots/entry_2_mid.jpg",
+      "role_scores": {
+        "entry": 0.466,
+        "billing": 2.753,
+        "main_floor": 1.765,
+        "queue": 1.499
+      },
+      "classified_role": "ENTRY_CAMERA",
+      "confidence": 0.133,
+      "reasoning": "Highest entry heuristic: door/glass brightness asymmetry, lower edge density, threshold-fixed framing"
+    },
+    {
+      "file": "zone.mp4",
+      "width": 960,
+      "frame_count": 2898,
+      "fps": 25.0,
+      "duration_sec": 115.9,
+      "motion": {
+        "left": 12.63,
+        "center": 15.74,
+        "right": 14.08
+      },
+      "brightness": {
+        "left": 125.4,
+        "center": 130.9,
+        "right": 134.4
+      },
+      "edge_density": 43.93,
+      "right_edge_density": 47.67,
+      "brightness_asymmetry": -8.99,
+      "screenshot": "store-intelligence/docs/audit_screenshots/zone_mid.jpg",
+      "role_scores": {
+        "entry": 0,
+        "billing": 3.234,
+        "main_floor": 1.728,
+        "queue": 1.501
+      },
+      "classified_role": "BILLING_CAMERA",
+      "confidence": 0.924,
+      "reasoning": "Highest billing heuristic: POS/counter edges on right third, elevated center motion in queue lane"
+    }
+  ]
+}

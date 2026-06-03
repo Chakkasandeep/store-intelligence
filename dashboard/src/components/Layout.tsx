@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
-import { STORE_ID } from '../config';
+import { getSelectedStoreId, setSelectedStoreId } from '../config';
+import { getHealth } from '../api/client';
 
 const navItems = [
   { to: '/', label: 'Dashboard', end: true },
@@ -10,6 +12,31 @@ const navItems = [
 ] as const;
 
 export function Layout() {
+  const [currentStore, setCurrentStore] = useState(getSelectedStoreId());
+  const [availableStores, setAvailableStores] = useState<string[]>(['ST1008', 'ST_STORE2']);
+
+  useEffect(() => {
+    getHealth()
+      .then((data) => {
+        if (data && data.stores) {
+          const ids = data.stores.map((s) => s.store_id);
+          if (ids.length > 0) {
+            setAvailableStores(ids);
+          }
+        }
+      })
+      .catch((err) => {
+        console.warn('Failed to load active stores list from health endpoint, using defaults:', err);
+      });
+  }, []);
+
+  const handleStoreChange = (storeId: string) => {
+    setSelectedStoreId(storeId);
+    setCurrentStore(storeId);
+    // Reload the page to reset websockets and fetch new metrics
+    window.location.reload();
+  };
+
   return (
     <div className="flex min-h-screen">
       <aside className="flex w-56 shrink-0 flex-col border-r border-[var(--color-border)] bg-[var(--color-surface-raised)]">
@@ -18,7 +45,22 @@ export function Layout() {
             Store Intelligence
           </p>
           <h1 className="mt-1 text-lg font-semibold text-[var(--color-text)]">Apex Retail</h1>
-          <p className="mt-2 font-mono text-xs text-sky-400">{STORE_ID}</p>
+          
+          <div className="mt-4">
+            <label htmlFor="store-selector" className="sr-only">Select Store</label>
+            <select
+              id="store-selector"
+              value={currentStore}
+              onChange={(e) => handleStoreChange(e.target.value)}
+              className="w-full rounded-md border border-[var(--color-border)] bg-[var(--color-surface-overlay)] px-2 py-1.5 font-sans text-sm text-[var(--color-text)] outline-none focus:border-sky-400"
+            >
+              {availableStores.map((id) => (
+                <option key={id} value={id}>
+                  {id === 'ST1008' ? 'ST1008 (Brigade)' : id === 'ST_STORE2' ? 'ST_STORE2 (Store 2)' : id}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
         <nav className="flex flex-1 flex-col gap-1 p-3">
           {navItems.map((item) => (

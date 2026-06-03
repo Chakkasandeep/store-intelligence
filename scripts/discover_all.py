@@ -1,4 +1,4 @@
-"""Run full discovery pipeline (POS, cameras, layout)."""
+"""Run full discovery pipeline (POS, cameras, layout) for both stores."""
 from __future__ import annotations
 
 import json
@@ -13,22 +13,27 @@ GENERATED = Path(__file__).resolve().parents[1] / "configs" / "generated"
 
 def main() -> None:
     GENERATED.mkdir(parents=True, exist_ok=True)
-    if (GENERATED / "pos_mapping.json").exists() and (GENERATED / "camera_profile.json").exists():
-        print("Discovery configs already present - skipping")
-        return
+    print("Running multi-store discovery pipeline...")
+    
     try:
-        discover_pos()
+        pos_res = discover_pos()
+        print(f"POS Discovery complete. Found stores: {list(pos_res.keys())}")
     except Exception as exc:
-        print(f"discover_pos skipped: {exc}")
+        print(f"discover_pos failed: {exc}")
+        
     try:
-        discover_cameras()
+        cam_res = discover_cameras()
+        print(f"Camera Discovery complete. Profiled stores: {list(cam_res.keys())}")
     except Exception as exc:
-        print(f"discover_cameras skipped: {exc}")
+        print(f"discover_cameras failed: {exc}")
+        
     try:
-        discover_layout()
+        lay_res = discover_layout()
+        print(f"Layout Discovery complete. Mapped stores: {list(lay_res.keys())}")
     except Exception as exc:
-        print(f"discover_layout skipped: {exc}")
-    print("Discovery complete -> configs/generated/")
+        print(f"discover_layout failed: {exc}")
+        
+    print("All Discovery complete -> configs/generated/")
 
 
 if __name__ == "__main__":
