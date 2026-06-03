@@ -27,11 +27,19 @@ foreach ($d in $dirs) {
 }
 
 # Events only (no discovery screenshots / layout PNG — HF rejects binaries)
+# Copy event jsonl files recursively (no discovery screenshots / layout PNG — HF rejects binaries)
 $eventsSrc = Join-Path $Src "data\events"
 $eventsDst = Join-Path $Target "data\events"
 New-Item -ItemType Directory -Force -Path $eventsDst | Out-Null
 if (Test-Path (Join-Path $eventsSrc "output.jsonl")) {
     Copy-Item (Join-Path $eventsSrc "output.jsonl") $eventsDst -Force
+}
+Get-ChildItem -Path $eventsSrc -Filter "*.jsonl" -Recurse | ForEach-Object {
+    $relative = $_.FullName.Substring($eventsSrc.Length + 1)
+    $destFile = Join-Path $eventsDst $relative
+    $destDir = Split-Path $destFile -Parent
+    New-Item -ItemType Directory -Force -Path $destDir | Out-Null
+    Copy-Item $_.FullName $destFile -Force
 }
 
 Copy-Item (Join-Path $Src "requirements-docker.txt") $Target -Force
